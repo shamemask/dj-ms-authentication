@@ -21,6 +21,13 @@ def registration(request_in: request, user_model: AbstractBaseUser,
                  form: forms.ModelForm):
     user_model.is_active = False
     user_model.save()
-    auth_user = login_user(request_in, form)
+    email = form['email'].value()
+    password = form['password'].value()
+    if 'full_name' in form:
+        full_name = form['full_name'].value()
+        auth_user = login_user(request, email=email,password=password, full_name=full_name)
+    elif 'company_name' in form:
+        company_name = form['company_name'].value()
+        auth_user = login_user(request_in, email=email, password=password,company_name=company_name)
     send_token_email(auth_user)
     return auth_user

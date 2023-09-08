@@ -36,10 +36,18 @@ def confirm_email(request):
         # Обработка ошибок, если токен недействителен или пользователь не найден
     templ_dict = {}
     templ_dict['message'] = message
-    auth_user = login_user(request, templ_dict['fizform'])
+    email = user.email
+    password = user.password
+    if 'full_name' in user.__dict__:
+        full_name = user.full_name
+        auth_user = login_user(request, email=email,password=password, full_name=full_name)
+    elif 'company_name' in user.__dict__:
+        company_name = user.company_name
+        auth_user = login_user(request, email=email,password=password, company_name=company_name)
     if auth_user is not None:
         templ_dict['user'] = auth_user
-        return templ_dict
+        request.session['user'] = auth_user.to_json()
+        # return templ_dict
     return render(request, 'message.html', templ_dict)
 def confirm_email2(request):
     key = request.GET.get('key')

@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
@@ -41,6 +43,17 @@ class FizUser(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+    def to_json(self):
+        return json.dumps({
+            'email':self.email,
+            'shop_name':self.shop_name,
+            'full_name':self.full_name,
+            'password':self.password,
+            'phone':self.phone,
+            'promo_code':self.promo_code,
+            'terms_of_service':self.terms_of_service,
+            'is_active':self.is_active
+        })
 
 class UrUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -68,3 +81,23 @@ class UrUser(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    def to_json(self):
+        return json.dumps({
+            'email':self.email,
+            'form':self.form,
+            'phone':self.phone,
+            'shop_name':self.shop_name,
+            'full_name':self.full_name,
+            'password':self.password,
+            'city':self.city,
+            'organization_name':self.organization_name,
+            'legal_address':self.legal_address,
+            'inn':self.inn,
+            'kpp':self.kpp,
+            'bank':self.bank,
+            'bik':self.bik,
+            'account_number':self.account_number,
+            'correspondent_account':self.correspondent_account,
+            'terms_of_service':self.terms_of_service,
+            'is_active':self.is_active
+        })

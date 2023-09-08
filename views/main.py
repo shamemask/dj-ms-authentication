@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.base_user import AbstractBaseUser
 
-from .login import login_user
+from .login import login_user, login_user_email, login_user_id
 from ..backends import FizUserBackend, UrUserBackend
 from ..forms.FizForm import FizUserRegistrationForm
 from ..forms.LoginForm import LoginForm
@@ -23,8 +23,10 @@ from ..views.register import registration
 @csrf_exempt
 def auth(request):
     templ_dict = {}
-
-    if request.method == 'POST':
+    user_email = request.session.get('user_email')
+    user_id = request.session.get('user_id')
+    print('user=',user_email,'user_id',user_id)
+    if request.method == 'POST' and not user_email and not user_id:
         data = request.POST
         if 'promo_code' not in data and len(data)>2:
             templ_dict['fizform'] = FizUserRegistrationForm()
@@ -51,6 +53,7 @@ def auth(request):
                 auth_user = registration(request, user, templ_dict['urform'])
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
+                    request.session['user'] = auth_user
                     return templ_dict
 
         elif len(data)>2:
@@ -69,15 +72,21 @@ def auth(request):
                 auth_user = registration(request, user, templ_dict['fizform'])
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
+                    request.session['user'] = auth_user
                     return templ_dict
         else:
             templ_dict['logform'] = LoginForm(request.POST)
-            auth_user = login_user(request, templ_dict['logform'])
+            email = templ_dict['logform']['email'].value()
+            password = templ_dict['logform']['password'].value()
+            auth_user = login_user_email(request, email, password)
             if auth_user is not None:
                 templ_dict['user'] = auth_user
                 return templ_dict
 
-
+    if user_email and user_id:
+        auth_user = login_user_id(request, user_email, user_id)
+        if auth_user is not None:
+            templ_dict['user'] = auth_user
     templ_dict['logform'] = LoginForm()
     templ_dict['fizform'] = FizUserRegistrationForm()
     templ_dict['urform'] = UrUserRegistrationForm()
