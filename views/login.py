@@ -1,4 +1,3 @@
-from urllib import request
 
 from allauth.socialaccount.models import SocialAccount
 from django import forms
@@ -7,7 +6,7 @@ from django.contrib.auth import login, authenticate
 from ..backends import FizUserBackend, UrUserBackend
 
 
-def login_user(request_in: request, email, password, company_name='', full_name=''):
+def login_user(request_in, email, password, company_name='', full_name=''):
     try:
         print('login_user')
         if company_name:
@@ -26,8 +25,9 @@ def login_user(request_in: request, email, password, company_name='', full_name=
         request_in.session['user_id'] = auth_user.id
         request_in.session['user_email'] = auth_user.email
         request_in.session['user_primary_email'] = auth_user.email
-    return auth_user
-def login_user_id(request_in: request, email, id):
+        request_in.session.save()
+        return auth_user
+def login_user_id(request_in, email, id):
     try:
         auth_user = FizUserBackend().authenticate_id(email=email,
                                                   id=id)
@@ -40,12 +40,12 @@ def login_user_id(request_in: request, email, id):
     if auth_user is not None:
 
         login(request_in, auth_user, backend='django.contrib.auth.backends.ModelBackend')
-    #     request_in.session['user_id'] = auth_user.id
-    #     request_in.session['user_email'] = auth_user.email
-    #     request_in.session['user_primary_email'] = auth_user.email
-    # request_in.session.save()
-    return auth_user
-def login_user_email(request_in: request, email, password):
+        request_in.session['user_id'] = auth_user.id
+        request_in.session['user_email'] = auth_user.email
+        request_in.session['user_primary_email'] = auth_user.email
+        request_in.session.save()
+        return auth_user
+def login_user_email(request_in, email, password):
 
     try:
         auth_user = FizUserBackend().authenticate_email(email=email,
@@ -62,5 +62,5 @@ def login_user_email(request_in: request, email, password):
         request_in.session['user_id'] = auth_user.id
         request_in.session['user_email'] = auth_user.email
         request_in.session['user_primary_email'] = auth_user.email
-    request_in.session.save()
-    return auth_user
+        request_in.session.save()
+        return auth_user

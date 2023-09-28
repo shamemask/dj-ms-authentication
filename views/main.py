@@ -3,6 +3,7 @@ import os
 from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.decorators import login_required
 
 from .login import login_user, login_user_email, login_user_id
 from ..backends import FizUserBackend, UrUserBackend
@@ -53,7 +54,6 @@ def auth(request):
                 auth_user = registration(request, user, templ_dict['urform'])
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
-                    request.session['user'] = auth_user
                     return templ_dict
 
         elif len(data)>2:
@@ -72,7 +72,6 @@ def auth(request):
                 auth_user = registration(request, user, templ_dict['fizform'])
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
-                    request.session['user'] = auth_user
                     return templ_dict
         else:
             templ_dict['logform'] = LoginForm(request.POST)
