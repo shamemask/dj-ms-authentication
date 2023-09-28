@@ -23,6 +23,7 @@ def registration(request_in: request, user_model: AbstractBaseUser,
     user_model.save()
     email = form['email'].value()
     password = form['password'].value()
+    print(form.data)
     if 'full_name' in form:
         full_name = form['full_name'].value()
         auth_user = login_user(request, email=email,password=password, full_name=full_name)
