@@ -23,12 +23,13 @@ def registration(request_in: request, user_model: AbstractBaseUser,
     user_model.save()
     email = form['email'].value()
     password = form['password'].value()
-    print(form.data)
     if 'full_name' in form:
         full_name = form['full_name'].value()
         auth_user = login_user(request, email=email,password=password, full_name=full_name)
     elif 'company_name' in form:
         company_name = form['company_name'].value()
         auth_user = login_user(request_in, email=email, password=password,company_name=company_name)
+    print('auth_user is not None '+ auth_user)
     send_token_email(auth_user)
+    print('send_token_email')
     return auth_user

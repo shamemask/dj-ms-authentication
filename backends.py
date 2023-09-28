@@ -6,8 +6,10 @@ from .UserModel import FizUser, UrUser
 class FizUserBackend(BaseBackend):
     def authenticate(self, email=None, full_name=None, password=None, **kwargs):
         try:
+            print('authenticate')
             return FizUser.objects.get(email=email, full_name=full_name, password=password)
         except FizUser.DoesNotExist:
+            print('FizUser.DoesNotExist')
             return None
     def authenticate_email(self, email=None, password=None, **kwargs):
         try:
