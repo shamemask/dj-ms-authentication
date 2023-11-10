@@ -4,10 +4,10 @@ from .UserModel import FizUser, UrUser
 
 
 class FizUserBackend(BaseBackend):
-    def authenticate(self, email=None, full_name=None, password=None, **kwargs):
+    def authenticate(self, email=None, password=None, **kwargs):
         try:
             print('authenticate')
-            return FizUser.objects.get(email=email, full_name=full_name, password=password)
+            return FizUser.objects.get(email=email, password=password)
         except FizUser.DoesNotExist:
             print('FizUser.DoesNotExist')
             return None
@@ -29,9 +29,9 @@ class FizUserBackend(BaseBackend):
         except FizUser.DoesNotExist:
             return None
 class UrUserBackend(BaseBackend):
-    def authenticate(self, email=None, company_name=None, password=None, **kwargs):
+    def authenticate(self, email=None, password=None, **kwargs):
         try:
-            return UrUser.objects.get(email=email, company_name=company_name, password=password)
+            return UrUser.objects.get(email=email, password=password)
         except UrUser.DoesNotExist:
             return None
     def authenticate_email(self, email=None, password=None, **kwargs):
