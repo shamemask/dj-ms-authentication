@@ -84,4 +84,7 @@ def send_token_email(user):
     # Отправьте email с токеном
     subject = 'Подтверждение email'
     message = render_to_string('activation_email.html', {'user': user, 'activation_url': confirmation_link})
-    send_mail(subject, message, 'snab061@bk.ru', [user.email])
+    try:
+        send_mail(subject, message, 'snab061@bk.ru', [user.email])
+    except Exception as e:
+        print(e)
