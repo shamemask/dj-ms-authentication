@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     def create_ur(self, email, **extra_fields):
@@ -22,18 +23,24 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Суперпользователь должен иметь is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Суперпользователь должен иметь is_superuser=True.'))
+
         return self.create_user(email, **extra_fields)
 
 
 class FizUser(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    shop_name = models.CharField(max_length=255)
-    full_name = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)  # Здесь предполагается хранение хэшированного пароля
-    phone = models.CharField(max_length=20)
-    promo_code = models.CharField(max_length=255, blank=True)
-    terms_of_service = models.BooleanField()
-    is_active = models.BooleanField(default=False, null=True)
+    email = models.EmailField(_('Email'), unique=True)
+    shop_name = models.CharField(_('Название магазина'), max_length=255)
+    full_name = models.CharField(_('Полное имя'), max_length=255)
+    password = models.CharField(_('Пароль'), max_length=255)  # Здесь предполагается хранение хэшированного пароля
+    phone = models.CharField(_('Телефон'), max_length=20)
+    promo_code = models.CharField(_('Промо-код'), max_length=255, blank=True)
+    terms_of_service = models.BooleanField(_('Условия обслуживания'))
+    is_active = models.BooleanField(_('Активный статус'), default=False, null=True)
 
     objects = CustomUserManager()
 
@@ -55,24 +62,28 @@ class FizUser(AbstractBaseUser):
             'is_active':self.is_active
         })
 
+    class Meta:
+        verbose_name = _('Физ.Лицо')
+        verbose_name_plural = _('Физ.Лица')
+
 class UrUser(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    form = models.CharField(max_length=255)
-    shop_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
-    full_name = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)  # Здесь предполагается хранение хэшированного пароля
-    city = models.CharField(max_length=255)
-    organization_name = models.CharField(max_length=255)
-    legal_address = models.CharField(max_length=255)
-    inn = models.CharField(max_length=12)
-    kpp = models.CharField(max_length=9)
-    bank = models.CharField(max_length=255)
-    bik = models.CharField(max_length=9)
-    account_number = models.CharField(max_length=20)
-    correspondent_account = models.CharField(max_length=20)
-    terms_of_service = models.BooleanField()
-    is_active = models.BooleanField(default=False, null=True)
+    email = models.EmailField(_('Email'), unique=True)
+    form = models.CharField(_('Форма'), max_length=255)
+    shop_name = models.CharField(_('Название магазина'), max_length=255)
+    phone = models.CharField(_('Телефон'), max_length=20)
+    full_name = models.CharField(_('Полное имя'), max_length=255)
+    password = models.CharField(_('Пароль'), max_length=255)  # Здесь предполагается хранение хэшированного пароля
+    city = models.CharField(_('Город'), max_length=255)
+    organization_name = models.CharField(_('Название организации'), max_length=255)
+    legal_address = models.CharField(_('Юридический адрес'), max_length=255)
+    inn = models.CharField(_('ИНН'), max_length=12)
+    kpp = models.CharField(_('КПП'), max_length=9)
+    bank = models.CharField(_('Банк'), max_length=255)
+    bik = models.CharField(_('БИК'), max_length=9)
+    account_number = models.CharField(_('Номер счета'), max_length=20)
+    correspondent_account = models.CharField(_('Корреспондентский счет'), max_length=20)
+    terms_of_service = models.BooleanField(_('Условия обслуживания'))
+    is_active = models.BooleanField(_('Активный статус'), default=False, null=True)
 
     objects = CustomUserManager()
 
@@ -101,3 +112,7 @@ class UrUser(AbstractBaseUser):
             'terms_of_service':self.terms_of_service,
             'is_active':self.is_active
         })
+
+    class Meta:
+        verbose_name = _('Юр.Лицо')
+        verbose_name_plural = _('Юр.Лица')
