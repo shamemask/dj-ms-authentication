@@ -11,6 +11,8 @@ def logout(request_in: request):
         del request_in.session['user_email']
         del request_in.session['user_primary_email']
     if request_in.user:
+        if request_in.user.is_superuser:
+            return redirect('admin/logout')
         del request_in.user
         request_in.session.save()
 
