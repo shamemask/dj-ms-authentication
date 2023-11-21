@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.base_user import AbstractBaseUser
-
+from ..logging import logger
 from .login import login_user
 from ..backends import FizUserBackend, UrUserBackend
 from ..views.email import send_confirmation_email, send_token_email
@@ -29,5 +29,5 @@ def registration(request_in, user_model: AbstractBaseUser,
         company_name = form['company_name'].value()
         auth_user = login_user(request_in, email=email, password=password,company_name=company_name)
     send_token_email(auth_user)
-    print('send_token_email')
+    logger.debug('send_token_email')
     return auth_user

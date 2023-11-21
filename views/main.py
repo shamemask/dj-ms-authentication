@@ -17,7 +17,7 @@ from django.shortcuts import render
 from ..UserModel import UrUser, FizUser
 from ..views.email import send_confirmation_email
 from ..views.register import registration
-
+from ..logging import logger
 
 # @sync_to_async
 # @login_required
@@ -26,7 +26,7 @@ def auth(request):
     templ_dict = {}
     user_email = request.session.get('user_email')
     user_id = request.session.get('user_id')
-    print('user=',user_email,'user_id',user_id)
+    logger.debug(f'user={user_email}, user_id={user_id}')
     if request.method == 'POST' and not user_email and not user_id:
         data = request.POST
         if 'promo_code' not in data and len(data)>2:

@@ -1,15 +1,15 @@
 from django.contrib.auth.backends import BaseBackend
-
+from .logging import logger
 from .UserModel import FizUser, UrUser
 
 
 class FizUserBackend(BaseBackend):
     def authenticate(self, email=None, password=None, **kwargs):
         try:
-            print('authenticate')
+            logger.debug('authenticate')
             return FizUser.objects.get(email=email, password=password)
         except FizUser.DoesNotExist:
-            print('FizUser.DoesNotExist')
+            logger.debug('FizUser.DoesNotExist')
             return None
     def authenticate_email(self, email=None, password=None, **kwargs):
         try:

@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
-
+from ..logging import logger
 from .login import login_user
 from ..backends import FizUserBackend, UrUserBackend
 from ..models2.Email import EmailConfirmation
@@ -49,17 +49,6 @@ def confirm_email(request):
         request.session['user'] = auth_user.to_json()
         # return templ_dict
     return render(request, 'message.html', templ_dict)
-def confirm_email2(request):
-    key = request.GET.get('key')
-    try:
-        confirmation = EmailConfirmation.objects.get(key=key)
-    except EmailConfirmation.DoesNotExist:
-        return render(request, 'confirmation_failed.html')
-    user = confirmation.user
-    user.email_verified = True
-    user.save()
-    confirmation.delete()
-    return redirect('confirmation_success')
 
 
 def send_confirmation_email(request, auth_user):
@@ -87,4 +76,4 @@ def send_token_email(user):
     try:
         send_mail(subject, message, 'snab061@bk.ru', [user.email])
     except Exception as e:
-        print(e)
+        logger.debug(e)
