@@ -6,7 +6,7 @@ from ..UserModel import FizUser
 def validate_unique_email(email):
     if FizUser.objects.filter(email=email).exists():
         raise forms.ValidationError(
-            _('This email is already in use'),
+            _('Пользователь с это почтой уже существует'),
             code='invalid_domain'
         )
 

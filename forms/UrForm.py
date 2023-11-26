@@ -1,5 +1,5 @@
 from django import forms
-
+from django.utils.translation import gettext_lazy as _
 from ..UserModel import UrUser
 from ..backends import UrUserBackend
 
@@ -7,7 +7,7 @@ from ..backends import UrUserBackend
 def validate_unique_email(email):
     if UrUser.objects.filter(email=email).exists():
         raise forms.ValidationError(
-            _('This email is already in use'),
+            _('Пользователь с это почтой уже существует'),
             code='invalid_domain'
         )
 
