@@ -34,6 +34,7 @@ class CustomUserManager(BaseUserManager):
 
 class FizUser(AbstractBaseUser):
     email = models.EmailField(_('Email'), unique=True)
+    balance = models.IntegerField(_('Баланс'), default=0)
     full_name = models.CharField(_('Полное имя'), max_length=255)
     password = models.CharField(_('Пароль'), max_length=255)  # Здесь предполагается хранение хэшированного пароля
     phone = models.CharField(_('Телефон'), max_length=20)
@@ -52,6 +53,7 @@ class FizUser(AbstractBaseUser):
     def to_json(self):
         return json.dumps({
             'email':self.email,
+            'balance':self.balance,
             'full_name':self.full_name,
             'password':self.password,
             'phone':self.phone,
@@ -66,6 +68,7 @@ class FizUser(AbstractBaseUser):
 
 class UrUser(AbstractBaseUser):
     email = models.EmailField(_('Email'), unique=True)
+    balance = models.IntegerField(_('Баланс'), default=0)
     form = models.CharField(_('Форма'), max_length=255)
     phone = models.CharField(_('Телефон'), max_length=20)
     full_name = models.CharField(_('Полное имя'), max_length=255)
@@ -92,6 +95,7 @@ class UrUser(AbstractBaseUser):
     def to_json(self):
         return json.dumps({
             'email':self.email,
+            'balance':self.balance,
             'form':self.form,
             'phone':self.phone,
             'full_name':self.full_name,
