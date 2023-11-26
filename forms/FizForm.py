@@ -1,10 +1,19 @@
 from django import forms
-
+from django.utils.translation import gettext_lazy as _
 from ..UserModel import FizUser
 
 
+def validate_unique_email(email):
+    if FizUser.objects.filter(email=email).exists():
+        raise forms.ValidationError(
+            _('This email is already in use'),
+            code='invalid_domain'
+        )
+
+
 class FizUserRegistrationForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input-silver', 'placeholder': 'Email*'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input-silver', 'placeholder': 'Email*'}),
+                             validators=[validate_unique_email])
 
     password = forms.CharField(max_length=20,
                                widget=forms.PasswordInput(attrs={'class': 'input-silver', 'style': 'font-size:10',
@@ -27,7 +36,6 @@ class FizUserRegistrationForm(forms.ModelForm):
     class Meta:
         model = FizUser
         fields = ('email', 'full_name', 'phone', 'promo_code', 'terms_of_service')
-
 
     def save(self, commit=True):
         user = super().save(commit=False)

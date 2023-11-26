@@ -1,10 +1,20 @@
 from django import forms
 
 from ..UserModel import UrUser
+from ..backends import UrUserBackend
+
+
+def validate_unique_email(email):
+    if UrUser.objects.filter(email=email).exists():
+        raise forms.ValidationError(
+            _('This email is already in use'),
+            code='invalid_domain'
+        )
 
 
 class UrUserRegistrationForm(forms.ModelForm):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input-silver', 'placeholder': 'Email*'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'input-silver', 'placeholder': 'Email*'}),
+                             validators=[validate_unique_email])
 
     shop_choices = [
         ('', 'Магазины*'),

@@ -54,6 +54,9 @@ def auth(request):
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
                     return templ_dict
+            else:
+                templ_dict['logform'] = LoginForm()
+                return templ_dict
 
         elif len(data)>2:
             templ_dict['fizform'] = FizUserRegistrationForm(request.POST)
@@ -71,6 +74,10 @@ def auth(request):
                 if auth_user is not None:
                     templ_dict['user'] = auth_user
                     return templ_dict
+
+            else:
+                templ_dict['logform'] = LoginForm()
+                return templ_dict
         else:
             templ_dict['logform'] = LoginForm(request.POST)
             email = templ_dict['logform']['email'].value()
