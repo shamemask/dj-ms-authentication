@@ -80,11 +80,18 @@ def auth(request):
                 return templ_dict
         else:
             templ_dict['logform'] = LoginForm(request.POST)
+            templ_dict['fizform'] = FizUserRegistrationForm()
+            templ_dict['urform'] = UrUserRegistrationForm()
             email = templ_dict['logform']['email'].value()
             password = templ_dict['logform']['password'].value()
+            remember_me = templ_dict['logform']['remember_me'].value()
             auth_user = login_user_email(request, email, password)
             if auth_user is not None:
                 templ_dict['user'] = auth_user
+                if remember_me:
+                    request.session.set_expiry(604800)  # Here we extend session.
+                else:
+                    request.session.set_expiry(0)
                 return templ_dict
 
     if user_email and user_id:
