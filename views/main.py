@@ -46,7 +46,6 @@ def auth(request):
                     bik=templ_dict['urform']['bik'].value(),
                     account_number=templ_dict['urform']['account_number'].value(),
                     correspondent_account=templ_dict['urform']['correspondent_account'].value(),
-                    shop=templ_dict['urform']['shop'].value(),
                     full_name=templ_dict['urform']['full_name'].value(),
                     phone=templ_dict['urform']['phone'].value(),
                     terms_of_service=templ_dict['urform']['terms_of_service'].value(),
@@ -63,7 +62,6 @@ def auth(request):
                 user = FizUser.objects.create_fiz(
                     email=templ_dict['fizform']['email'].value(),
                     password=templ_dict['fizform']['password'].value(),
-                    shop_name=templ_dict['fizform']['shop_name'].value(),
                     full_name=templ_dict['fizform']['full_name'].value(),
                     phone=templ_dict['fizform']['phone'].value(),
                     promo_code=templ_dict['fizform']['promo_code'].value(),
