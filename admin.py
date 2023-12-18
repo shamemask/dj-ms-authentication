@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-
+admin.site.site_header = 'Администрирование outletavto'
 # Register your models2 here.
 
 from authentication.UserModel import FizUser, UrUser
